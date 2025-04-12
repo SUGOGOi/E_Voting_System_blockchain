@@ -1,7 +1,8 @@
-import { create } from 'zustand'
-import { devtools } from 'zustand/middleware';
+import { create } from "zustand";
+import { devtools } from "zustand/middleware";
 
-export const vcState = create(devtools((set) => ({
+export const vcState = create(
+  devtools((set) => ({
     VCID: "",
     email: "",
     name: "",
@@ -15,14 +16,24 @@ export const vcState = create(devtools((set) => ({
     setRole: (role) => set({ role: role }),
     setStatus: (status) => set({ status: status }),
     setMessage: (message) => set({ message: message }),
-})))
+  }))
+);
 
-
-export const voterState = create(devtools((set) => ({
+export const voterState = create(
+  devtools((set) => ({
     voterId: "",
     isVoted: "",
 
     setVoterID: (voterId) => set({ voterId: voterId }),
     setIsVoted: (isVoted) => set({ isVoted: isVoted }),
+  }))
+);
 
-})))
+export const adminState = create(
+  devtools((set) => ({
+    isLogin: null,
+    setIsLogin: (item) => set({ isLogin: item }),
+  }))
+);
+
+export const SERVER_URL = "http://localhost:5000";

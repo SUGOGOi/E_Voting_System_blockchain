@@ -2,7 +2,6 @@
 pragma solidity ^0.8.0;
 
 contract OnlineVotingSystem {
-
     // Struct for Candidate
     struct Candidate {
         string name;
@@ -27,10 +26,20 @@ contract OnlineVotingSystem {
     uint256[] public voterIds;
 
     // Add a candidate
-    function addCandidate(string memory _name, uint256 _id, string memory _politicalParty) public {
+    function addCandidate(
+        string memory _name,
+        uint256 _id,
+        string memory _politicalParty
+    ) public {
         require(bytes(_name).length > 0, "Candidate name cannot be empty");
-        require(bytes(_politicalParty).length > 0, "Political party name cannot be empty");
-        require(candidates[_id].id == 0, "Candidate with this ID already exists");
+        require(
+            bytes(_politicalParty).length > 0,
+            "Political party name cannot be empty"
+        );
+        require(
+            candidates[_id].id == 0,
+            "Candidate with this ID already exists"
+        );
 
         candidates[_id] = Candidate({
             name: _name,
@@ -47,11 +56,7 @@ contract OnlineVotingSystem {
         require(bytes(_name).length > 0, "Voter name cannot be empty");
         require(voters[_id].id == 0, "Voter with this ID already exists");
 
-        voters[_id] = Voter({
-            name: _name,
-            id: _id,
-            isVoted: false
-        });
+        voters[_id] = Voter({name: _name, id: _id, isVoted: false});
 
         voterIds.push(_id);
     }
@@ -62,15 +67,14 @@ contract OnlineVotingSystem {
         require(candidates[_candidateId].id != 0, "Candidate does not exist");
         require(!voters[_voterId].isVoted, "Voter has already voted");
 
-        // Increment vote count for the candidate
         candidates[_candidateId].voteCount += 1;
-
-        // Mark the voter as having voted
         voters[_voterId].isVoted = true;
     }
 
     // Get voter details
-    function getVoterDetails(uint256 _voterId) public view returns (uint256, bool) {
+    function getVoterDetails(
+        uint256 _voterId
+    ) public view returns (uint256, bool) {
         require(voters[_voterId].id != 0, "Voter does not exist");
         return (voters[_voterId].id, voters[_voterId].isVoted);
     }
@@ -85,7 +89,11 @@ contract OnlineVotingSystem {
     }
 
     // Get all candidates without vote count
-    function getAllCandidatesWithoutVoteCount() public view returns (string[] memory, uint256[] memory, string[] memory) {
+    function getAllCandidatesWithoutVoteCount()
+        public
+        view
+        returns (string[] memory, uint256[] memory, string[] memory)
+    {
         string[] memory names = new string[](candidateIds.length);
         uint256[] memory ids = new uint256[](candidateIds.length);
         string[] memory politicalParties = new string[](candidateIds.length);
@@ -99,8 +107,22 @@ contract OnlineVotingSystem {
 
         return (names, ids, politicalParties);
     }
+
+    // Delete all candidates
+    function deleteAllCandidates() public {
+        for (uint256 i = 0; i < candidateIds.length; i++) {
+            delete candidates[candidateIds[i]];
+        }
+        delete candidateIds;
+    }
+
+    // Delete all voters
+    function deleteAllVoters() public {
+        for (uint256 i = 0; i < voterIds.length; i++) {
+            delete voters[voterIds[i]];
+        }
+        delete voterIds;
+    }
 }
 
-
-//0x86a6000e5129c7cc363dbb8fc8ea9fa65aef2a00
-//Hardhat : 0xcc669D41B053d4570C9473D7ead7964A3A4a74d4
+//0x13f3e68525a2aa5ed8094843f806c45ee117535d

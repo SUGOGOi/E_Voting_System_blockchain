@@ -19,7 +19,8 @@ const VotingBooth = () => {
   const [error, setError] = useState(null); // State for errors
   const voterId = voterState((state) => state.voterId);
   const [isBtnLoading, setBtnIsLoading] = useState(false);
-  const contractAddress = "0x86a6000e5129c7cc363dbb8fc8ea9fa65aef2a00";
+  // const contractAddress = "0x86a6000e5129c7cc363dbb8fc8ea9fa65aef2a00";
+  const contractAddress = "0x13f3e68525a2aa5ed8094843f806c45ee117535d";
 
 
   //<===================================================================FOR COUNTDOWN==========================================
@@ -42,7 +43,7 @@ const VotingBooth = () => {
     socket.current = io('http://localhost:5000');
 
     // Listen for countdown updates
-    socket.current.on('countdown', ({ countdownValue, isPaused,canVote }) => {
+    socket.current.on('countdown', ({ countdownValue, isPaused, canVote }) => {
       setCountdown(countdownValue);
     });
 
@@ -54,25 +55,25 @@ const VotingBooth = () => {
   useEffect(() => {
     if (countdown > 0) {
       setBtnIsLoading(true);
-    }else{
+    } else {
       setBtnIsLoading(false)
     }
   }, [countdown]);
 
 
-//<=======================================================================CAST VOTE=========================
-  const handleVoteSubmit = async() => {
-    
+  //<=======================================================================CAST VOTE=========================
+  const handleVoteSubmit = async () => {
+
     const provider = new ethers.providers.Web3Provider(window.ethereum);
     setBtnIsLoading(true)
     await provider.send("eth_requestAccounts", []);
     const signer = provider.getSigner();
-    const contractInstance = new ethers.Contract (
+    const contractInstance = new ethers.Contract(
       contractAddress, ABI, signer
     );
 
     try {
-      const tx = await contractInstance.vote(voterId,selectedCandidate.candidate_ID);
+      const tx = await contractInstance.vote(voterId, selectedCandidate.candidate_ID);
       await tx.wait();
 
       setBtnIsLoading(false)
@@ -106,10 +107,10 @@ const VotingBooth = () => {
         setIsLoading(false);
       }
     };
-  
+
     fetchCandidates();
   }, []);
-  
+
   if (isLoading) return <LoadingPage />;
   if (error) return <div className="error">{error}</div>;
 
@@ -125,9 +126,9 @@ const VotingBooth = () => {
           />
         ))}
       </div>
-      {isBtnLoading===true? (<button className="vote-button"   onClick={handleVoteSubmit}>
+      {isBtnLoading === true ? (<button className="vote-button" onClick={handleVoteSubmit}>
         Submit Vote
-      </button>):null}
+      </button>) : null}
       <h2>Time Remaining</h2>
       <h3>{formatTime(countdown)}</h3>
 

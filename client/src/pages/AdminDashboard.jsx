@@ -5,16 +5,25 @@ import axios from "axios"
 import ABI from "../../ABI.json"
 import { ethers } from 'ethers';
 import { io } from 'socket.io-client';
+// import { useNavigate } from 'react-router-dom';
+
+function deleteCookie(name) {
+  const expires = new Date(Date.now() - 1000).toUTCString(); // 1 second in the past
+  document.cookie = `${name}=; expires=${expires}; path=/;`;
+}
+
 
 
 
 const AdminDashboard = () => {
-  const [candidates, setCandidates] = useState([]);
-  const [voters, setVoters] = useState([]);
-  const [timer, setTimer] = useState("");
+  // const [candidates, setCandidates] = useState([]);
+  // const [voters, setVoters] = useState([]);
+  // const [timer, setTimer] = useState("");
+  // const navigateTo = useNavigate();
   const [activeSection, setActiveSection] = useState("addCandidate");
   const [votingResults, setVotingResult] = useState([])
-  const contractAddress = "0x86a6000e5129c7cc363dbb8fc8ea9fa65aef2a00";
+  // const contractAddress = "0x86a6000e5129c7cc363dbb8fc8ea9fa65aef2a00";
+  const contractAddress = "0x13f3e68525a2aa5ed8094843f806c45ee117535d";
 
   // Add Candidate
   const [candidate_ID, setCandidate_ID] = useState("");
@@ -51,7 +60,9 @@ const AdminDashboard = () => {
 
   //<======================================================Add candidate
   const handleAddCandidate = async (e) => {
-    if(!window.ethereum){  //======================check for metamask/cryptowallet
+
+    e.preventDefault();
+    if (!window.ethereum) {  //======================check for metamask/cryptowallet
       return toast.error("Intall Metamask or any Crypto wallet")
     }
 
@@ -62,7 +73,6 @@ const AdminDashboard = () => {
       formData.append("party_name", party_name);
       formData.append("file1", candidate_Photo);
       formData.append("file2", party_Photo);
-
       try {
         const response = await axios.post("http://localhost:5000/v1/admin/register_candidate", {
           candidate_ID, candidate_name, party_name, file1: candidate_Photo, file2: party_Photo
@@ -71,6 +81,9 @@ const AdminDashboard = () => {
             "Content-Type": "multipart/form-data",
           }
         },)
+
+        console.log(response)
+        toast.success(response.data.message)
 
         //If successful
         const provider = new ethers.providers.Web3Provider(window.ethereum);
@@ -83,11 +96,11 @@ const AdminDashboard = () => {
         try {
           const tx = await contractInstance.addCandidate(candidate_name, candidate_ID, party_name);
           await tx.wait();
-          toast.success("Register successfuly")
+          toast.success("Candidate Registered in Blockchain")
 
         } catch (error) {
           console.log(error)
-          toast.error("ERROR!")
+          toast.error("ERROR! adding candidate to Blockchain")
         }
 
       } catch (error) {
@@ -95,12 +108,14 @@ const AdminDashboard = () => {
           toast.error(error.response.data.error)
         }
 
+      } finally {
+        setCandidate_ID("");
+        setCandidate_name("");
+        setParty_name("");
+        setCandidate_Photo(null);
+        setParty_Photo(null);
       }
-      setCandidate_ID("");
-      setCandidate_name("");
-      setParty_name("");
-      setCandidate_Photo(null);
-      setParty_Photo(null);
+
     } else {
       toast.error("Enter all fields")
     }
@@ -112,8 +127,10 @@ const AdminDashboard = () => {
   const [voter_name, setVoter_name] = useState("");
   const [voter_ID, setVoter_ID] = useState("");
   const [voter_DOB, setVoter_DOB] = useState("");
-  const handleAddVoter = async () => {
-    if(!window.ethereum){
+  const handleAddVoter = async (e) => {
+
+    e.preventDefault();
+    if (!window.ethereum) {
       return toast.error("Intall Metamask or any Crypto wallet")
     }
     if (voter_DOB && voter_ID && voter_name) {
@@ -133,6 +150,8 @@ const AdminDashboard = () => {
           // }
         },)
 
+        console.log(response)
+
         //If successful ====> add voter to blockchain
         const provider = new ethers.providers.Web3Provider(window.ethereum);
         await provider.send("eth_requestAccounts", []);
@@ -144,18 +163,21 @@ const AdminDashboard = () => {
         try {
           const tx = await contractInstance.addVoter(voter_name, voter_ID);
           await tx.wait();
-          toast.success("Voter added successfuly")
+          toast.success("Voter added in Blockchain")
 
         } catch (error) {
           console.log(error)
-          toast.error("ERROR!")
+          toast.error("ERROR! adding voter to blockchain")
         }
 
       } catch (error) {
 
         console.log(error)
         toast.error("Error adding voter to database")
-
+      } finally {
+        setVoter_name("")
+        setVoter_ID("")
+        setVoter_DOB("")
 
       }
 
@@ -205,18 +227,18 @@ const AdminDashboard = () => {
   //<===========================================FETCH RESULT=======================================>
   const fetchVotingResults = async () => {
 
-    if(!window.ethereum){
+    if (!window.ethereum) {
       return toast.error("Intall Metamask or any Crypto wallet")
     }
     const provider = new ethers.providers.Web3Provider(window.ethereum);
-    
+
     await provider.send("eth_requestAccounts", []);
     const signer = provider.getSigner();
     const contractInstance = new ethers.Contract(
       contractAddress, ABI, signer
     );
     const candidatesList = await contractInstance.getAllCandidates();
-    const formattedCandidates = candidatesList.map((candidate, index) => {
+    const formattedCandidates = candidatesList.map((candidate) => {
       return {
         id: Number(candidate.id),
         name: candidate.name,
@@ -228,37 +250,69 @@ const AdminDashboard = () => {
 
   }
 
+  const logoutHandler = async (e) => {
+
+    e.preventDefault();
+    try {
+      const response = await axios.post("http://localhost:5000/v1/logout", {
+        withCredentials: true
+      })
+
+      if (response.data.success === true) {
+        toast.success(response.data.message)
+        // navigateTo("/a-login")
+        window.location.href = '/a-login';
+      }
+    } catch (error) {
+      console.log(error)
+      if (error.response.data.error) {
+        toast.error(error.response.data.error)
+      }
+    }
+
+
+    deleteCookie("token")
+  }
+
   return (
     <div className="admin-dashboard">
       {/* Sidebar */}
       <div className="sidebar">
-        <h2>Dashboard</h2>
-        <ul>
-          <li
-            className={activeSection === "addCandidate" ? "active" : ""}
-            onClick={() => setActiveSection("addCandidate")}
-          >
-            Add Candidate
-          </li>
-          <li
-            className={activeSection === "addVoter" ? "active" : ""}
-            onClick={() => setActiveSection("addVoter")}
-          >
-            Add Voter
-          </li>
-          <li
-            className={activeSection === "setTimer" ? "active" : ""}
-            onClick={() => setActiveSection("setTimer")}
-          >
-            Set Countdown Timer
-          </li>
-          <li
-            className={activeSection === "viewResults" ? "active" : ""}
-            onClick={() => setActiveSection("viewResults")}
-          >
-            View Results
-          </li>
-        </ul>
+        <div>
+          <h2>Dashboard</h2>
+          <ul>
+            <li
+              className={activeSection === "addCandidate" ? "active" : ""}
+              onClick={() => setActiveSection("addCandidate")}
+            >
+              Add Candidate
+            </li>
+            <li
+              className={activeSection === "addVoter" ? "active" : ""}
+              onClick={() => setActiveSection("addVoter")}
+            >
+              Add Voter
+            </li>
+            <li
+              className={activeSection === "setTimer" ? "active" : ""}
+              onClick={() => setActiveSection("setTimer")}
+            >
+              Set Countdown Timer
+            </li>
+            <li
+              className={activeSection === "viewResults" ? "active" : ""}
+              onClick={() => setActiveSection("viewResults")}
+            >
+              View Results
+            </li>
+
+          </ul>
+        </div>
+        <div className="imp_btns">
+          <button>Delete all candidates</button>
+          <button>Delete all voters</button>
+          <button onClick={logoutHandler} className="logout_btn">Logout</button>
+        </div>
       </div>
 
       {/* Main Content */}
@@ -341,7 +395,7 @@ const AdminDashboard = () => {
                     type="number"
                     value={hours}
                     onChange={(e) => setHours(parseInt(e.target.value, 10) || 0)}
-                    style={{ margin: '0 10px', width:'50px' }}
+                    style={{ margin: '0 10px', width: '50px' }}
                   />
                 </label>
                 <label>
@@ -350,7 +404,7 @@ const AdminDashboard = () => {
                     type="number"
                     value={minutes}
                     onChange={(e) => setMinutes(parseInt(e.target.value, 10) || 0)}
-                    style={{ margin: '0 10px', width:'50px' }}
+                    style={{ margin: '0 10px', width: '50px' }}
                   />
                 </label>
                 <label>
@@ -359,7 +413,7 @@ const AdminDashboard = () => {
                     type="number"
                     value={seconds}
                     onChange={(e) => setSeconds(parseInt(e.target.value, 10) || 0)}
-                    style={{ margin: '0 10px', width:'50px' }}
+                    style={{ margin: '0 10px', width: '50px' }}
                   />
                 </label>
                 <button onClick={handleSetCountdown}>Set Timer</button>
@@ -367,13 +421,13 @@ const AdminDashboard = () => {
             ) : null}
 
             <div style={{ marginTop: '20px' }}>
-              <button  style={{ margin: '0 10px' }} onClick={handleStart} disabled={countdown === 0 || !isPaused}>
+              <button style={{ margin: '0 10px' }} onClick={handleStart} disabled={countdown === 0 || !isPaused}>
                 Start
               </button>
-              <button  style={{ margin: '0 10px' }}  onClick={handlePause} disabled={isPaused}>
+              <button style={{ margin: '0 10px' }} onClick={handlePause} disabled={isPaused}>
                 Pause
               </button>
-              <button   style={{ margin: '0 10px' }} onClick={handleReset}>Reset</button>
+              <button style={{ margin: '0 10px' }} onClick={handleReset}>Reset</button>
             </div>
 
           </div>
@@ -389,12 +443,13 @@ const AdminDashboard = () => {
               <ul className="results-list">
                 {votingResults.map((candidate, index) => (
                   <li key={index}>
-                     <strong>ID : {candidate.id} {candidate.name}</strong> : {candidate.voteCount} votes
+                    <strong>ID : {candidate.id} {candidate.name}</strong> : {candidate.voteCount} votes
                   </li>
                 ))}
               </ul>
             ) : (
-              <p>No results to display. Click "Fetch Results" to load data.</p>
+              // <p>No results to display. Click "Fetch Results" to load data.</p>
+              <p>No results to display. Click &quot;Fetch Results&quot; to load data.</p>
             )}
           </div>
         )}

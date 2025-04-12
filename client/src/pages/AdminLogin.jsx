@@ -1,42 +1,46 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import "../styles/adminLogin.css";
 import axios from "axios"
 import { toast } from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
+import { adminState } from "../store/store";
 
 
 const AdminLogin = () => {
+  const { setIsLogin } = adminState();
   const navigateTo = useNavigate();
   const [adminID, setAdminID] = useState("");
   const [password, setPassword] = useState("");
-  const[isLoading, setIsLoading]= useState(false)
+  const [isLoading, setIsLoading] = useState(false)
 
-  const handleLogin = async(event) => {
+  const handleLogin = async (event) => {
     event.preventDefault();
-    if(adminID && password){
+    if (adminID && password) {
       setIsLoading(true)
       try {
         setIsLoading(true)
         const response = await axios.post('http://localhost:5000/v1/admin_login', {
-          ID:adminID,
+          ID: adminID,
           password
-        },{
+        }, {
           withCredentials: true,  // Include credentials (cookies, HTTP auth)
-      });
+        });
 
-      if(response && response.data.status === "success"){
-        toast.success("Welcome")
-      }
+        if (response && response.data.success === true) {
+          setIsLogin(true)
+          toast.success(response.data.message)
+        }
 
-      setAdminID("")
-      setPassword("")
-      setIsLoading(false)
-      navigateTo("/admin")
+        setAdminID("")
+        setPassword("")
+        setIsLoading(false)
+        navigateTo("/admin")
 
 
       } catch (error) {
-        if(error.response.data.message){
-          toast.error(error.response.data.message)
+        console.log(error)
+        if (error.response.data.error) {
+          toast.error(error.response.data.error)
         }
         setAdminID("")
         setPassword("")
