@@ -1,5 +1,5 @@
 import React from "react";
-import '../styles/candidateCard.css'
+import '../styles/candidateCard.scss'
 
 const CandidateCard = ({ candidate, isSelected, onSelect }) => {
   console.log(isSelected)

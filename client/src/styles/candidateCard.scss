@@ -1,0 +1,63 @@
+.candidate-card {
+  background: white;
+  border: 2px solid #4ca1af;
+  border-radius: 10px;
+  padding: 20px;
+  text-align: center;
+  width: 220px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+  cursor: pointer;
+  font-family: Arial, sans-serif;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+
+  &:hover {
+    border-color: #2c3e50;
+    transform: scale(1.03);
+  }
+
+  &.selected {
+    border-color: #138808; // Green border for selected
+    background-color: #e6f9ec; // Light green bg for selected
+  }
+
+  .candidate-photo {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    border-radius: 50%;
+    border: 3px solid #ff9933; // Saffron border
+    margin-bottom: 15px;
+  }
+
+  h3 {
+    margin: 10px 0;
+    color: #2c3e50;
+    font-size: 1.2rem;
+  }
+
+  .party-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 10px;
+
+    .party-photo {
+      width: 40px;
+      height: 40px;
+      object-fit: cover;
+      border-radius: 50%;
+      border: 2px solid #138808;
+    }
+
+    p {
+      font-size: 0.95rem;
+      font-weight: 500;
+      color: #34495e;
+      margin: 0;
+    }
+  }
+}

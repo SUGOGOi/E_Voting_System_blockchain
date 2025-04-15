@@ -1,0 +1,74 @@
+.voter-validation-container {
+  background-color: white;
+  padding: 40px;
+  margin: 40px auto;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  max-width: 450px;
+  width: 100%;
+  text-align: center;
+  // border-top: 8px solid #ff9933; // saffron top border
+
+  h2 {
+    color: #2c3e50;
+    margin-bottom: 30px;
+    font-size: 1.8rem;
+    font-weight: bold;
+  }
+}
+
+.voter-form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+
+  .form-group {
+    width: 100%;
+    text-align: left;
+
+    label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: bold;
+      color: #333;
+    }
+
+    .input-field {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 1rem;
+      transition: border-color 0.3s ease;
+
+      &:focus {
+        border-color: #138808; // green
+        outline: none;
+        box-shadow: 0 0 6px rgba(19, 136, 8, 0.3);
+      }
+    }
+  }
+
+  .error-message {
+    color: #c0392b;
+    font-size: 0.9rem;
+    margin-top: -10px;
+  }
+
+  .submit-button {
+    background-color: #138808; // Indian green
+    color: white;
+    padding: 12px 25px;
+    border: none;
+    border-radius: 6px;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s;
+
+    &:hover {
+      background-color: #0e6b06;
+    }
+  }
+}

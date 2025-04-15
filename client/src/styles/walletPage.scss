@@ -1,0 +1,107 @@
+@use "sass:color";
+
+.App {
+  width: 100%;
+  height: 100vh;
+  // border: 2px solid red;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #ff9933 0%, #ffffff 50%, #138808 100%);
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  padding: 2rem;
+
+  h1 {
+    font-size: 2.5rem;
+    color: #000080; // Navy Blue (Ashoka Chakra color)
+    margin-bottom: 2rem;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+  }
+
+  .connect-button {
+    margin-bottom: 1.5rem;
+
+    .connect-btn {
+      background-color: #ff9933; // Saffron
+      color: white;
+      border: none;
+      padding: 0.75rem 1.5rem;
+      font-size: 1rem;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+
+      &:hover {
+        background-color: color.adjust(#ff9933, $lightness: -10%);
+      }
+    }
+
+    .connected {
+      color: #138808; // Green
+      font-weight: bold;
+      font-size: 1rem;
+      background-color: #ffffffcc;
+      padding: 0.5rem 1rem;
+      border-radius: 5px;
+      border: 2px solid #138808;
+    }
+  }
+
+  .form-container {
+    background: #ffffffcc;
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.15);
+    width: 100%;
+    max-width: 400px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    // border: 1px solid red;
+
+    label {
+      margin-top: 1rem;
+      margin-bottom: 0.5rem;
+      font-weight: bold;
+      color: #000;
+    }
+
+    input {
+      width: 90%;
+      padding: 0.6rem;
+      border: 2px solid #000080;
+      border-radius: 6px;
+      font-size: 1rem;
+      outline: none;
+
+      &:focus {
+        border-color: #138808;
+        box-shadow: 0 0 5px rgba(19, 136, 8, 0.5);
+      }
+    }
+
+    .submit-btn {
+      width: 200px;
+      margin-top: 1.5rem;
+      padding: 0.75rem;
+      background-color: #138808;
+      color: white;
+      font-size: 1rem;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+
+      &:disabled {
+        background-color: #cccccc;
+        cursor: not-allowed;
+      }
+
+      &:hover:not(:disabled) {
+        background-color: color.adjust(#138808, $lightness: -10%);
+      }
+    }
+  }
+}

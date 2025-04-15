@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { ethers } from 'ethers';
-import '../styles/walletPage.css';
+import '../styles/walletPage.scss';
 import axios from 'axios';
 import { vcState } from '../store/store.js';
 import { toast } from 'react-hot-toast';
@@ -94,6 +94,7 @@ function WalletVCenterLogin() {
       <form className="form-container" onSubmit={handleSubmit}>
         <label htmlFor="ID">Voting Center ID</label>
         <input
+          className='input-id'
           type="text"
           id="ID"
           value={ID}
@@ -103,6 +104,7 @@ function WalletVCenterLogin() {
 
         <label htmlFor="password">Password</label>
         <input
+          className='input-pass'
           type="password"
           id="password"
           value={password}

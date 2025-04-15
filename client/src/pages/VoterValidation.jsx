@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import '../styles/voterValidation.css';  // Import the CSS file
+import { useState } from 'react';
+import '../styles/voterValidation.scss';  // Import the CSS file
 import axios from "axios"
 import { useNavigate } from 'react-router-dom';
 import { toast } from "react-hot-toast";
@@ -11,40 +11,40 @@ function VoterValidation() {
   const [voter_DOB, setVoter_DOB] = useState('');
   const [error, setError] = useState('');
 
-  const {setVoterID,setIsVoted  } = voterState();
+  const { setVoterID, setIsVoted } = voterState();
 
   // Handle form submission
-  const handleSubmit = async(event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    if(voter_DOB && voter_ID){
+    if (voter_DOB && voter_ID) {
       try {
         const response = await axios.post('http://localhost:5000/voter/voter-validation', {
           voter_ID,
           voter_DOB
-        },{
+        }, {
           withCredentials: true,  // Include credentials (cookies, HTTP auth)
-      });
-      setVoterID(voter_ID)
-      
+        });
+        setVoterID(voter_ID)
 
-      //call getcandidate details through backend
-      const response2 = await axios.get(`http://localhost:5000/v1/admin/get_voter_details/${voter_ID}`, { 
+
+        //call getcandidate details through backend
+        const response2 = await axios.get(`http://localhost:5000/v1/admin/get_voter_details/${voter_ID}`, {
           withCredentials: true,  // Include credentials (cookies, HTTP auth)
-          })
+        })
 
-          if( response2.data.isVoted === true){
-            toast.error("Already voted")
-            setVoter_ID("")
-            setVoter_DOB("")
+        if (response2.data.isVoted === true) {
+          toast.error("Already voted")
+          setVoter_ID("")
+          setVoter_DOB("")
 
-          }
-          else{
-            toast.success("cast your vote")
-            navigateTo("/voting-booth")
-          }
+        }
+        else {
+          toast.success("cast your vote")
+          navigateTo("/voting-booth")
+        }
 
       } catch (error) {
-        if(error.response.data.error){
+        if (error.response.data.error) {
           toast.error(error.response.data.error)
         }
       }

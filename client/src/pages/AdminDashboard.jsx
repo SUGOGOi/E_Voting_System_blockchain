@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import "../styles/adminDashboard.css";
+import "../styles/adminDashboard.scss";
 import { toast } from "react-hot-toast"
 import axios from "axios"
 import ABI from "../../ABI.json"
@@ -212,9 +212,9 @@ const AdminDashboard = () => {
     socket.current.emit('startCountdown');
   };
 
-  const handlePause = () => {
-    socket.current.emit('pauseCountdown');
-  };
+  // const handlePause = () => {
+  //   socket.current.emit('pauseCountdown');
+  // };
 
   const handleReset = () => {
     socket.current.emit('resetCountdown');
@@ -309,8 +309,8 @@ const AdminDashboard = () => {
           </ul>
         </div>
         <div className="imp_btns">
-          <button>Delete all candidates</button>
-          <button>Delete all voters</button>
+          {/* <button>Delete all candidates</button>
+          <button>Delete all voters</button> */}
           <button onClick={logoutHandler} className="logout_btn">Logout</button>
         </div>
       </div>
@@ -352,7 +352,7 @@ const AdminDashboard = () => {
               accept="image/*"
               onChange={handlePartyPhotoChange}
             />
-            <button onClick={handleAddCandidate}>Add Candidate</button>
+            <button style={{ width: "300px" }} onClick={handleAddCandidate}>Add Candidate</button>
           </div>
         )}
 
@@ -376,9 +376,9 @@ const AdminDashboard = () => {
               id="dob"
               value={voter_DOB}
               onChange={(e) => setVoter_DOB(e.target.value)}
-              className="input-field"
+
             />
-            <button onClick={handleAddVoter}>Add Voter</button>
+            <button style={{ width: "300px" }} onClick={handleAddVoter}>Add Voter</button>
 
           </div>
         )}
@@ -424,9 +424,9 @@ const AdminDashboard = () => {
               <button style={{ margin: '0 10px' }} onClick={handleStart} disabled={countdown === 0 || !isPaused}>
                 Start
               </button>
-              <button style={{ margin: '0 10px' }} onClick={handlePause} disabled={isPaused}>
+              {/* <button style={{ margin: '0 10px' }} onClick={handlePause} disabled={isPaused}>
                 Pause
-              </button>
+              </button> */}
               <button style={{ margin: '0 10px' }} onClick={handleReset}>Reset</button>
             </div>
 
@@ -442,8 +442,8 @@ const AdminDashboard = () => {
             {votingResults.length > 0 ? (
               <ul className="results-list">
                 {votingResults.map((candidate, index) => (
-                  <li key={index}>
-                    <strong>ID : {candidate.id} {candidate.name}</strong> : {candidate.voteCount} votes
+                  <li key={index} style={{ width: "100%" }}>
+                    <strong>ID : {candidate.id} </strong> <strong>{candidate.name}</strong>: {candidate.voteCount} vote
                   </li>
                 ))}
               </ul>

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import '../styles/votingBooth.css';
+import '../styles/votingBooth.scss';
 import CandidateCard from "../components/CandidateCard.jsx";
 import LoadingPage from "../components/LoadingPage.jsx";
 import axios from "axios";
