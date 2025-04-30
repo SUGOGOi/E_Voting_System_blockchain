@@ -6,6 +6,8 @@ import ABI from "../../ABI.json"
 import { ethers } from 'ethers';
 import { io } from 'socket.io-client';
 // import { useNavigate } from 'react-router-dom';
+import FaceRegister from "../components/FaceRegister";
+
 
 function deleteCookie(name) {
   const expires = new Date(Date.now() - 1000).toUTCString(); // 1 second in the past
@@ -16,6 +18,7 @@ function deleteCookie(name) {
 
 
 const AdminDashboard = () => {
+  const [showRegister, setShowRegister] = useState(false);
   // const [candidates, setCandidates] = useState([]);
   // const [voters, setVoters] = useState([]);
   // const [timer, setTimer] = useState("");
@@ -352,7 +355,7 @@ const AdminDashboard = () => {
               accept="image/*"
               onChange={handlePartyPhotoChange}
             />
-            <button style={{ width: "300px" }} onClick={handleAddCandidate}>Add Candidate</button>
+            <button className="a_button" style={{ width: "300px" }} onClick={handleAddCandidate}>Add Candidate</button>
           </div>
         )}
 
@@ -378,7 +381,17 @@ const AdminDashboard = () => {
               onChange={(e) => setVoter_DOB(e.target.value)}
 
             />
-            <button style={{ width: "300px" }} onClick={handleAddVoter}>Add Voter</button>
+            <div style={{ padding: "2rem" }}>
+              <button onClick={() => setShowRegister(true)}>
+                Open Face Registration
+              </button>
+              <FaceRegister
+                show={showRegister}
+                onClose={() => setShowRegister(false)}
+                onSuccess={() => setShowRegister(false)}
+              />
+            </div>
+            <button className="a_button" style={{ width: "300px" }} onClick={handleAddVoter}>Add Voter</button>
 
           </div>
         )}
@@ -416,18 +429,18 @@ const AdminDashboard = () => {
                     style={{ margin: '0 10px', width: '50px' }}
                   />
                 </label>
-                <button onClick={handleSetCountdown}>Set Timer</button>
+                <button className="a_button" onClick={handleSetCountdown}>Set Timer</button>
               </div>
             ) : null}
 
             <div style={{ marginTop: '20px' }}>
-              <button style={{ margin: '0 10px' }} onClick={handleStart} disabled={countdown === 0 || !isPaused}>
+              <button className="a_button" style={{ margin: '0 10px' }} onClick={handleStart} disabled={countdown === 0 || !isPaused}>
                 Start
               </button>
               {/* <button style={{ margin: '0 10px' }} onClick={handlePause} disabled={isPaused}>
                 Pause
               </button> */}
-              <button style={{ margin: '0 10px' }} onClick={handleReset}>Reset</button>
+              <button className="a_button" style={{ margin: '0 10px' }} onClick={handleReset}>Reset</button>
             </div>
 
           </div>

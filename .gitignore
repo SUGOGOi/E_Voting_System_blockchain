@@ -1,8 +1,13 @@
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
 # dependencies
-/f_server/.venv
-/f_server/.env
+/face_server/.venv
+/face_server/.env
+/face_server/__pycache__
+/face_server/config/__pycache__
+/face_server/controllers/__pycache__
+/face_server/routes/__pycache__
+/face_server/utils/__pycache__
 /client/node_modules
 /server/node_modules
 /.pnp
