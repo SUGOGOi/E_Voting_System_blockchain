@@ -36,4 +36,14 @@ export const adminState = create(
   }))
 );
 
-export const SERVER_URL = "http://localhost:5000";
+export const faceState = create(
+  devtools((set) => ({
+    faceData: null,
+    isFaceMatch: false,
+    setFaceMatch: (item) => set({ isFaceMatch: item }),
+    setFaceData: (encoding) => set({ faceData: encoding }),
+    clearFaceData: () => set({ faceData: null }),
+  }))
+);
+
+export const SERVER_URL = "http://localhost:4000";

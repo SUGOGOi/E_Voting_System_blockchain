@@ -19,7 +19,7 @@ const AdminLogin = () => {
       setIsLoading(true)
       try {
         setIsLoading(true)
-        const response = await axios.post('http://localhost:5000/v1/admin_login', {
+        const response = await axios.post('http://localhost:4000/v1/admin_login', {
           ID: adminID,
           password
         }, {
@@ -38,7 +38,7 @@ const AdminLogin = () => {
 
 
       } catch (error) {
-        console.log(error)
+        // console.log(error)
         if (error.response.data.error) {
           toast.error(error.response.data.error)
         }

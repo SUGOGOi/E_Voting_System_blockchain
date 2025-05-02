@@ -147,9 +147,17 @@ body {
 
   .fetch-button {
     background-color: #ff9933;
+    width: 200px;
+    padding: 10px;
+    border-radius: 5px;
+    font-size: 1rem;
+    font-weight: 700;
+    color: white;
+    border-style: none;
 
     &:hover {
       background-color: #e07d00;
+      cursor: pointer;
     }
   }
 }
@@ -203,5 +211,46 @@ body {
     margin: 10px 0;
     border: 1px solid #ddd;
     border-radius: 5px;
+  }
+}
+
+.face_area {
+  // border: 1px solid red;
+  width: 300px;
+
+  .face_reg_button {
+    background-color: #263f82;
+    padding: 10px;
+    border-radius: 4px;
+    font-size: medium;
+    font-weight: 400;
+    color: white;
+    border-style: none;
+
+    &:hover {
+      cursor: pointer;
+    }
+  }
+
+  .face_retake_area {
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+
+    .face_status_text {
+      p {
+        color: #138808;
+        font-size: 15px;
+        font-weight: 600;
+      }
+    }
+    .face_retake_button {
+      padding: 5px;
+      background-color: #263f82;
+      border-radius: 3px;
+      font-weight: 400;
+      color: white;
+      border-style: none;
+    }
   }
 }

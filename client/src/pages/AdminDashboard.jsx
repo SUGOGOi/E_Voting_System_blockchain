@@ -7,6 +7,7 @@ import { ethers } from 'ethers';
 import { io } from 'socket.io-client';
 // import { useNavigate } from 'react-router-dom';
 import FaceRegister from "../components/FaceRegister";
+import { faceState } from "../store/store"
 
 
 function deleteCookie(name) {
@@ -18,6 +19,8 @@ function deleteCookie(name) {
 
 
 const AdminDashboard = () => {
+  const { faceData } = faceState();
+  const clearFaceEncoding = faceState((state) => state.clearFaceData);
   const [showRegister, setShowRegister] = useState(false);
   // const [candidates, setCandidates] = useState([]);
   // const [voters, setVoters] = useState([]);
@@ -77,7 +80,7 @@ const AdminDashboard = () => {
       formData.append("file1", candidate_Photo);
       formData.append("file2", party_Photo);
       try {
-        const response = await axios.post("http://localhost:5000/v1/admin/register_candidate", {
+        const response = await axios.post("http://localhost:4000/v1/admin/register_candidate", {
           candidate_ID, candidate_name, party_name, file1: candidate_Photo, file2: party_Photo
         }, {
           headers: {
@@ -142,10 +145,11 @@ const AdminDashboard = () => {
       formData1.append("voter_name", voter_name);
       formData1.append("voter_ID", voter_ID);
       formData1.append("voter_DOB", voter_DOB);
+      formData1.append("encoding", faceData)
 
       try {
-        const response = await axios.post("http://localhost:5000/v1/admin/register_voter", {
-          voter_name, voter_ID, voter_DOB
+        const response = await axios.post("http://localhost:4000/v1/admin/register_voter", {
+          voter_name, voter_ID, voter_DOB, encoding: faceData
         }, {
           withCredentials: true
           // , headers: {
@@ -181,6 +185,7 @@ const AdminDashboard = () => {
         setVoter_name("")
         setVoter_ID("")
         setVoter_DOB("")
+        clearFaceEncoding()
 
       }
 
@@ -193,7 +198,7 @@ const AdminDashboard = () => {
   //<========================================COUNTDOWN============================================>
   useEffect(() => {
     // Connect to the backend WebSocket
-    socket.current = io('http://localhost:5000');
+    socket.current = io('http://localhost:4000');
 
     // Listen for countdown updates
     socket.current.on('countdown', ({ countdownValue, isPaused }) => {
@@ -257,7 +262,7 @@ const AdminDashboard = () => {
 
     e.preventDefault();
     try {
-      const response = await axios.post("http://localhost:5000/v1/logout", {
+      const response = await axios.post("http://localhost:4000/v1/logout", {
         withCredentials: true
       })
 
@@ -381,10 +386,24 @@ const AdminDashboard = () => {
               onChange={(e) => setVoter_DOB(e.target.value)}
 
             />
-            <div style={{ padding: "2rem" }}>
-              <button onClick={() => setShowRegister(true)}>
-                Open Face Registration
-              </button>
+            <div className="face_area" style={{ padding: "1rem" }}>
+              {!faceData ? (
+                <button className="face_reg_button" onClick={() => setShowRegister(true)}>
+                  Open Face Registration
+                </button>
+              ) : (
+                <div className="face_retake_area">
+                  <div className="face_status_text">
+                    <p>Face Saved✅</p>
+                  </div>
+                  <button className="face_retake_button" onClick={() => {
+                    clearFaceEncoding();
+                    setShowRegister(true);
+                  }}>
+                    Retake
+                  </button>
+                </div>
+              )}
               <FaceRegister
                 show={showRegister}
                 onClose={() => setShowRegister(false)}

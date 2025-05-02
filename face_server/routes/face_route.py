@@ -10,20 +10,19 @@ def register_face():
     file = request.files["file"]
     try:
         encoding = register_face_controller(file)
-        return jsonify({"encoding" :encoding}), 200
+        return jsonify({"encoding" :encoding, "success":True, "message":"Face saved temporarily"}), 200
     except Exception as e:
-        return jsonify({"error":str(e)}),500
+        return jsonify({"error":str(e), "success":False}),500
     
 @face_bp.route("/verify",methods=["POST"])
 def verify_face():
-    voter_id = request.args.get("id")
+    voter_id = request.args.get("voter_id")
     if not voter_id or "file" not in request.files:
-        return jsonify({"error":"missing id or file"}),400
+        return jsonify({"error":"missing id or file", "success":False}),400
     file = request.files['file']
     try:
-        result = verify_face_controller(voter_id, file)
-        if isinstance(result, tuple):
-            return jsonify(result[0], result[1])
-        return result[0]
+        result, status_code = verify_face_controller(voter_id, file)
+        print(result)
+        return jsonify(result), status_code
     except Exception as e:
-        return jsonify({"error":str(e)}),400
+        return jsonify({"error":str(e),"success":False}),400

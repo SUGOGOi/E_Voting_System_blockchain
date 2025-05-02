@@ -86,8 +86,14 @@ export const registerCandidate = async (req, res, next) => {
 //<=================================================REG VOTER=======================================================================>
 export const registerVoter = async (req, res, next) => {
   try {
-    const { voter_name, voter_ID, voter_DOB } = req.body;
+    const { voter_name, voter_ID, voter_DOB, encoding } = req.body;
     console.log(voter_name, voter_ID, voter_DOB);
+
+    if (!encoding) {
+      return res.status(400).json({
+        error: "No face data, Try again!",
+      });
+    }
 
     if (!voter_name || !voter_ID || !voter_DOB) {
       // return next(new ErrorHandler("Enter all fields", 400));
@@ -110,6 +116,7 @@ export const registerVoter = async (req, res, next) => {
       voter_name,
       voter_ID,
       voter_DOB,
+      encoding,
     });
 
     // console.log(voter)

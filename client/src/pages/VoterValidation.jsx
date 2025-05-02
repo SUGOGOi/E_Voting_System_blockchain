@@ -3,22 +3,36 @@ import '../styles/voterValidation.scss';  // Import the CSS file
 import axios from "axios"
 import { useNavigate } from 'react-router-dom';
 import { toast } from "react-hot-toast";
-import { voterState } from '../store/store.js';
+import { faceState, voterState } from '../store/store.js';
+import FaceVerification from '../components/FaceVerification.jsx';
 
 function VoterValidation() {
   const navigateTo = useNavigate();
   const [voter_ID, setVoter_ID] = useState('');
   const [voter_DOB, setVoter_DOB] = useState('');
   const [error, setError] = useState('');
+  const [showVerification, setShowVerification] = useState(false);
+
 
   const { setVoterID, setIsVoted } = voterState();
+  const { isFaceMatch, setFaceMatch } = faceState();
+
+  //Handle face verification
+  const faceVerificationHandler = async (e) => {
+    e.preventDefault();
+    if (!voter_DOB && !voter_ID) {
+      toast.error("Please provide Voter ID and DOB")
+      return;
+    }
+    setShowVerification(true)
+  }
 
   // Handle form submission
   const handleSubmit = async (event) => {
     event.preventDefault();
     if (voter_DOB && voter_ID) {
       try {
-        const response = await axios.post('http://localhost:5000/voter/voter-validation', {
+        const response = await axios.post('http://localhost:4000/voter/voter-validation', {
           voter_ID,
           voter_DOB
         }, {
@@ -28,7 +42,7 @@ function VoterValidation() {
 
 
         //call getcandidate details through backend
-        const response2 = await axios.get(`http://localhost:5000/v1/admin/get_voter_details/${voter_ID}`, {
+        const response2 = await axios.get(`http://localhost:4000/v1/admin/get_voter_details/${voter_ID}`, {
           withCredentials: true,  // Include credentials (cookies, HTTP auth)
         })
 
@@ -57,7 +71,7 @@ function VoterValidation() {
   return (
     <div className="voter-validation-container">
       <h2>Voter Validation</h2>
-      <form onSubmit={handleSubmit} className="voter-form">
+      <div onSubmit={handleSubmit} className="voter-form">
         <div className="form-group">
           <label htmlFor="voterId">Voter ID:</label>
           <input
@@ -80,8 +94,39 @@ function VoterValidation() {
           />
         </div>
         {error && <p className="error-message">{error}</p>}
-        <button type="submit" className="submit-button">Validate</button>
-      </form>
+        <div className="face_area">
+          {
+            !isFaceMatch ? (
+
+              <button className="face_v_button" onClick={faceVerificationHandler}>
+                Open Face Verification
+              </button>
+
+            ) : (
+              <div className="face_retake_area">
+                <div className="face_status_text">
+                  <p>Verified✅</p>
+                </div>
+                <button className="face_retake_button" onClick={() => {
+                  setFaceMatch(false);
+                  setShowVerification(true);
+                }}>
+                  Retake
+                </button>
+              </div>
+            )
+          }
+
+          <FaceVerification
+            show={showVerification}
+            voter_ID={voter_ID}
+            onClose={() => setShowVerification(false)}
+            onSuccess={() => setShowVerification(false)}
+          />
+        </div>
+
+        <button type="submit" onClick={() => (handleSubmit)} className="submit-button">Validate</button>
+      </div>
     </div>
   );
 }

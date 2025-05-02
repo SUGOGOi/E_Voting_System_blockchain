@@ -6,12 +6,12 @@ import "../styles/faceRegister.scss";
 import { faceState } from "../store/store";
 import { toast } from 'react-hot-toast';
 
-export default function FaceRegister({ show, onClose, onSuccess }) {
+export default function FaceVerification({ voter_ID, show, onClose, onSuccess }) {
     const webcamRef = useRef(null);
     const [imageFile, setImageFile] = useState(null);
     const [imgSrc, setImgSrc] = useState(null); // for displaying the captured image
 
-    const { setFaceData } = faceState();
+    const { setFaceMatch } = faceState();
 
     if (!show) return null;
 
@@ -45,16 +45,17 @@ export default function FaceRegister({ show, onClose, onSuccess }) {
         formData.append("file", imageFile);
 
         try {
-            const res = await axios.post("http://localhost:5000/api/faces/register", formData, {
+            const res = await axios.post(`http://localhost:5000/api/faces/verify?voter_id=${voter_ID}`, formData, {
                 headers: { "Content-Type": "multipart/form-data" },
             });
             // console.log(res)
             toast.success(res.data.message);
-            setFaceData(res.data.encoding)
+            setFaceMatch(true)
             setImgSrc(null);
             setImageFile(null);
             if (onSuccess) onSuccess();
         } catch (err) {
+            console.log(err)
             toast.error(err.response?.data?.error || "Please try again later!");
         }
     };
@@ -63,7 +64,7 @@ export default function FaceRegister({ show, onClose, onSuccess }) {
         <div className="modal-backdrop" onClick={handleBackdropClick}>
             <div className="modal-content">
                 <button className="modal-close" onClick={onClose}>&times;</button>
-                <h2>Register Face</h2>
+                <h2>Verify Face</h2>
                 {imgSrc ? (
                     <img src={imgSrc} alt="captured" className="webcam" />
                 ) : (
@@ -84,7 +85,7 @@ export default function FaceRegister({ show, onClose, onSuccess }) {
                     )}
                 </div>
                 <form onSubmit={handleSubmit}>
-                    <button className="submit-btn" type="submit">Register</button>
+                    <button className="submit-btn" type="submit">Verify</button>
                 </form>
                 {/* <div className="message">{message}</div> */}
             </div>
@@ -92,7 +93,8 @@ export default function FaceRegister({ show, onClose, onSuccess }) {
     );
 }
 
-FaceRegister.propTypes = {
+FaceVerification.propTypes = {
+    voter_ID: PropTypes.string.isRequired,
     show: PropTypes.bool.isRequired,
     onClose: PropTypes.func.isRequired,
     onSuccess: PropTypes.func,
