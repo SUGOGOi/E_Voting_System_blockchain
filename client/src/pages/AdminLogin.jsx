@@ -4,6 +4,7 @@ import axios from "axios"
 import { toast } from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
 import { adminState } from "../store/store";
+import { WalletMultiButton } from "@solana/wallet-adapter-react-ui";
 
 
 const AdminLogin = () => {
@@ -54,6 +55,8 @@ const AdminLogin = () => {
     <div className="login-container">
       <div className="login-box">
         <h2>Admin Login</h2>
+
+
         <form onSubmit={handleLogin}>
           <div className="form-group">
             <label htmlFor="adminID">Admin ID</label>

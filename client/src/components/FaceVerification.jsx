@@ -35,7 +35,7 @@ export default function FaceVerification({ voter_ID, show, onClose, onSuccess })
         setImageFile(null);
     };
 
-    const handleSubmit = async (e) => {
+    const handleFaceVerify = async (e) => {
         e.preventDefault();
         if (!imageFile) {
             toast.error("Please capture your image first.");
@@ -48,9 +48,13 @@ export default function FaceVerification({ voter_ID, show, onClose, onSuccess })
             const res = await axios.post(`http://localhost:5000/api/faces/verify?voter_id=${voter_ID}`, formData, {
                 headers: { "Content-Type": "multipart/form-data" },
             });
-            // console.log(res)
-            toast.success(res.data.message);
-            setFaceMatch(true)
+            console.log(res)
+            if (res.data.match === true) {
+                toast.success("Face verified")
+            } else {
+                toast.error("Face mismatched")
+            }
+            setFaceMatch(res.data.match)
             setImgSrc(null);
             setImageFile(null);
             if (onSuccess) onSuccess();
@@ -84,7 +88,7 @@ export default function FaceVerification({ voter_ID, show, onClose, onSuccess })
                         <button className="capture-btn" onClick={capture}>Capture Photo</button>
                     )}
                 </div>
-                <form onSubmit={handleSubmit}>
+                <form onSubmit={handleFaceVerify}>
                     <button className="submit-btn" type="submit">Verify</button>
                 </form>
                 {/* <div className="message">{message}</div> */}

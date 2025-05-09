@@ -1,5 +1,6 @@
 import { create } from "zustand";
 import { devtools } from "zustand/middleware";
+import { PublicKey } from "@solana/web3.js";
 
 export const vcState = create(
   devtools((set) => ({
@@ -46,4 +47,28 @@ export const faceState = create(
   }))
 );
 
+export const initializeState = create(
+  devtools((set) => ({
+    systemInitialized: false,
+    programState: null,
+    setSystemInitialized: (item) => set({ systemInitialized: item }),
+    setProgramState: (item) => set({ programState: item }),
+  }))
+);
+
+export const resultState = create(
+  devtools((set) => ({
+    candidateResult: [],
+    setCandidateResult: (item) => set({ candidateResult: item }),
+  }))
+);
+
 export const SERVER_URL = "http://localhost:4000";
+
+// export const EVM_SMART_CONTRACT_PUBKEY = new PublicKey(
+//   "DexJ1VxAuL8PM3E8B7mi7gpk934XvrxTK2aN1eB2vbLn"
+// );
+
+export const EVM_SMART_CONTRACT_PUBKEY = new PublicKey(
+  "D6FmaZDfQAMQ3GERMEnxLKmkwbP21q14r1hciAy2L5o"
+);

@@ -10,6 +10,10 @@
 /face_server/utils/__pycache__
 /client/node_modules
 /server/node_modules
+/server/contracts/evm 2.so
+/server/contracts/evm 2.zip
+/server/contracts/program-keypair.json
+/server/contracts/wallet-keypair.json
 /.pnp
 .pnp.*
 .yarn/*

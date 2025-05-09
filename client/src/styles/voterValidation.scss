@@ -71,6 +71,18 @@
       background-color: #0e6b06;
     }
   }
+
+  .unsubmit-button {
+    background-color: grey;
+    color: white;
+    padding: 12px 25px;
+    border: none;
+    border-radius: 6px;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: not-allowed;
+    transition: background-color 0.3s;
+  }
 }
 
 .face_area {

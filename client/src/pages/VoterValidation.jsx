@@ -21,7 +21,7 @@ function VoterValidation() {
   const faceVerificationHandler = async (e) => {
     e.preventDefault();
     if (!voter_DOB && !voter_ID) {
-      toast.error("Please provide Voter ID and DOB")
+      toast.error("Please provide Voter ID ")
       return;
     }
     setShowVerification(true)
@@ -71,7 +71,7 @@ function VoterValidation() {
   return (
     <div className="voter-validation-container">
       <h2>Voter Validation</h2>
-      <div onSubmit={handleSubmit} className="voter-form">
+      <div className="voter-form">
         <div className="form-group">
           <label htmlFor="voterId">Voter ID:</label>
           <input
@@ -125,7 +125,12 @@ function VoterValidation() {
           />
         </div>
 
-        <button type="submit" onClick={() => (handleSubmit)} className="submit-button">Validate</button>
+        {/* <button type="submit" onClick={() => (handleSubmit)} className="submit-button">Validate</button> */}
+        <button
+          type="submit"
+          onClick={handleSubmit}
+          className={!isFaceMatch ? "unsubmit-button" : "submit-button"}
+        >Validate</button>
       </div>
     </div>
   );

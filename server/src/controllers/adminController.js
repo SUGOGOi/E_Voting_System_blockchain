@@ -56,7 +56,7 @@ export const registerCandidate = async (req, res, next) => {
       rm(file2[0].path, () => {
         console.log(`${file2[0].originalname} deleted`);
       });
-      return res.status(409).json({ error: "candidate already exist" });
+      return res.status(409).json({ error: "candidate id already exist" });
     }
 
     // const tx = await contract.addCandidate(candidate_name, candidate_ID, politicalParty);

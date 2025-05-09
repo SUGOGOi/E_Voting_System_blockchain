@@ -27,5 +27,5 @@ def verify_face_controller(voter_id, file):
     unknown_encoding = unknown_encodings[0]
     match = face_recognition.compare_faces([known_encoding], unknown_encoding)[0]
     print(match)
-    return {"match": bool(match), "id": voter_id, "success": bool(match), "message":"Face verified"}, 200
+    return {"match": bool(match), "id": voter_id, "success": bool(match)}, 200
 

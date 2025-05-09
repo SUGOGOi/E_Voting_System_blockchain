@@ -3,7 +3,7 @@ import '../styles/votingBooth.scss';
 import CandidateCard from "../components/CandidateCard.jsx";
 import LoadingPage from "../components/LoadingPage.jsx";
 import axios from "axios";
-import ABI from "../../ABI.json"
+import ABI from "../../idl.json"
 import { voterState } from '../store/store.js';
 import { ethers } from 'ethers';
 import { toast } from 'react-hot-toast';
