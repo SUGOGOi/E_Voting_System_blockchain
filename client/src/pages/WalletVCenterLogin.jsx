@@ -5,8 +5,20 @@ import { vcState } from '../store/store.js';
 import { toast } from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
 import { WalletMultiButton } from '@solana/wallet-adapter-react-ui';
+import { useVotingSystem } from "../hooks/useVotingSystem";
+
 
 function WalletVCenterLogin() {
+  //========================for solana
+  const {
+    initialize
+  } = useVotingSystem();
+
+
+
+
+
+
   const navigateTo = useNavigate();
 
   // States to hold input values and connection status
@@ -44,6 +56,7 @@ function WalletVCenterLogin() {
 
           // Show success toast and navigate
           toast.success(response.data.message);
+          initialize()
           navigateTo('/voter-validation');
         } else {
           toast.error('No response data received from server.');

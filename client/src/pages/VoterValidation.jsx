@@ -5,8 +5,11 @@ import { useNavigate } from 'react-router-dom';
 import { toast } from "react-hot-toast";
 import { faceState, voterState } from '../store/store.js';
 import FaceVerification from '../components/FaceVerification.jsx';
+import { useVotingSystem } from "../hooks/useVotingSystem";
+
 
 function VoterValidation() {
+  const { getVoterById } = useVotingSystem()
   const navigateTo = useNavigate();
   const [voter_ID, setVoter_ID] = useState('');
   const [voter_DOB, setVoter_DOB] = useState('');
@@ -40,23 +43,25 @@ function VoterValidation() {
         });
         setVoterID(voter_ID)
 
-
         //call getcandidate details through backend
         const response2 = await axios.get(`http://localhost:4000/v1/admin/get_voter_details/${voter_ID}`, {
           withCredentials: true,  // Include credentials (cookies, HTTP auth)
         })
+        // console.log(response2.data)
 
-        if (response2.data.isVoted === true) {
+        if (response2.data.voter.hasVoted === true) {
           toast.error("Already voted")
           setVoter_ID("")
           setVoter_DOB("")
+          setFaceMatch(false)
 
         }
         else {
+          setFaceMatch(false)
           toast.success("cast your vote")
           navigateTo("/voting-booth")
-        }
 
+        }
       } catch (error) {
         if (error.response.data.error) {
           toast.error(error.response.data.error)

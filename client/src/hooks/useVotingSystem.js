@@ -29,7 +29,7 @@ export const useVotingSystem = () => {
   const [loading, setLoading] = useState(false);
   const [transactionPending, setTransactionPending] = useState(false);
   const [candidates, setCandidates] = useState([]);
-  const [voters, setVoters] = useState([]);
+  // const [voters, setVoters] = useState([]);
 
   const program = useMemo(() => {
     if (anchorWallet) {
@@ -44,6 +44,7 @@ export const useVotingSystem = () => {
   }, [connection, anchorWallet]);
 
   // console.log(program.programId);
+  // const program_ID = program.programId;
 
   //PDA helpers
   const getStatePda = () =>
@@ -286,8 +287,10 @@ export const useVotingSystem = () => {
       setTransactionPending(true);
       const [voterPda] = getVoterPda(voterId);
       const [candidatePda] = getCandidatePda(candidateId);
+      // console.log(voterPda);
+      // console.log(candidatePda);
 
-      await program.methods
+      const signature = await program.methods
         .vote()
         .accounts({
           voter: voterPda,
@@ -296,11 +299,10 @@ export const useVotingSystem = () => {
         })
         .rpc();
 
-      console.log("vote successfully");
-      toast.success("vote successfully");
-
-      fetchCandidates();
-      fetchVoters();
+      if (signature) {
+        console.log("vote successfully");
+        toast.success("vote successfully");
+      }
     } catch (error) {
       console.log(error);
       toast.error("Error casting vote");
@@ -315,7 +317,7 @@ export const useVotingSystem = () => {
     addVoter,
     vote,
     candidates,
-    voters,
+    // voters,
     fetchCandidates,
     fetchVoters,
     loading,

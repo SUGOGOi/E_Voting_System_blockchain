@@ -1,16 +1,15 @@
-// import { ErrorHandler } from "../utils/utilityClass.js";
-// import getDataUri from "../utils/dataUri.js";
 import { Candidate } from "../models/candidateModel.js";
 import { Voter } from "../models/voterModel.js";
 import { rm } from "fs";
 import { socketManager } from "../socket/socketManager.js";
 import { SOCKET_EVENTS } from "../socket/events.js";
-import contract from "../config/contractConfig.js";
-
 import { Admin } from "../models/adminModel.js";
 import jwt from "jsonwebtoken";
 import { sendToken } from "../utils/sendToken.js";
-// import AdminRefreshToken from "../models/adminRefreshTokenModel.js";
+import {
+  createWalletFromPrivateKey,
+  getVoterById,
+} from "../config/contractConfig.js";
 
 //<=============================================REG CANDIDATE================================================================>
 export const registerCandidate = async (req, res, next) => {
@@ -218,19 +217,22 @@ export const getAllCandidatewithdetails = async (req, res) => {
 
 //<==============================GET VOTER DETAILS==========================================>
 export const getVoterDetails = async (req, res) => {
-  const { voterId } = req.params;
-
   try {
-    const voter = await contract.getVoterDetails(voterId);
+    const { voterId } = req.params;
+
+    if (!voterId) {
+      return res.status(400).json({ success: false, error: "invalid voterId" });
+    }
+
+    // console.log(voterId);
+    const wallet = createWalletFromPrivateKey();
+    // console.log(wallet);,
+    const voter = await getVoterById(voterId, wallet);
 
     if (voter) {
-      return res.status(200).json({
-        voterId: voter[0].toString(),
-        isVoted: voter[1],
-      });
+      return res.status(200).json({ success: true, voter });
     }
   } catch (error) {
-    // return next(new ErrorHandler({ success: false, message: error.message }, 500));
     return res
       .status(500)
       .json({ success: false, error: "Internal server error" });

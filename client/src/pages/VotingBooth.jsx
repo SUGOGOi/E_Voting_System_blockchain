@@ -3,12 +3,12 @@ import '../styles/votingBooth.scss';
 import CandidateCard from "../components/CandidateCard.jsx";
 import LoadingPage from "../components/LoadingPage.jsx";
 import axios from "axios";
-import ABI from "../../idl.json"
 import { voterState } from '../store/store.js';
-import { ethers } from 'ethers';
 import { toast } from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
 import { io } from 'socket.io-client';
+import { useVotingSystem } from "../hooks/useVotingSystem";
+
 
 
 const VotingBooth = () => {
@@ -20,15 +20,21 @@ const VotingBooth = () => {
   const voterId = voterState((state) => state.voterId);
   const [isBtnLoading, setBtnIsLoading] = useState(false);
   // const contractAddress = "0x86a6000e5129c7cc363dbb8fc8ea9fa65aef2a00";
-  const contractAddress = "0x13f3e68525a2aa5ed8094843f806c45ee117535d";
+  // const contractAddress = "0x13f3e68525a2aa5ed8094843f806c45ee117535d";
+
+
+  //===============================================================FOR solana=================================================
+  const {
+    vote
+  } = useVotingSystem();
 
 
   //<===================================================================FOR COUNTDOWN==========================================
   const [countdown, setCountdown] = useState(0); // Raw countdown in seconds
-  const [isPaused, setIsPaused] = useState(true);
-  const [hours, setHours] = useState(0);
-  const [minutes, setMinutes] = useState(0);
-  const [seconds, setSeconds] = useState(0);
+  // const [isPaused, setIsPaused] = useState(true);
+  // const [hours, setHours] = useState(0);
+  // const [minutes, setMinutes] = useState(0);
+  // const [seconds, setSeconds] = useState(0);
   const socket = React.useRef(null);
 
   const formatTime = (totalSeconds) => {
@@ -40,10 +46,10 @@ const VotingBooth = () => {
 
   useEffect(() => {
     // Connect to the backend WebSocket
-    socket.current = io('http://localhost:5000');
+    socket.current = io('http://localhost:4000');
 
     // Listen for countdown updates
-    socket.current.on('countdown', ({ countdownValue, isPaused, canVote }) => {
+    socket.current.on('countdown', ({ countdownValue }) => {
       setCountdown(countdownValue);
     });
 
@@ -62,30 +68,23 @@ const VotingBooth = () => {
 
 
   //<=======================================================================CAST VOTE=========================
-  const handleVoteSubmit = async () => {
+  const handleVoteSubmit = async (e) => {
+    e.preventDefault();
 
-    const provider = new ethers.providers.Web3Provider(window.ethereum);
     setBtnIsLoading(true)
-    await provider.send("eth_requestAccounts", []);
-    const signer = provider.getSigner();
-    const contractInstance = new ethers.Contract(
-      contractAddress, ABI, signer
-    );
-
     try {
-      const tx = await contractInstance.vote(voterId, selectedCandidate.candidate_ID);
-      await tx.wait();
-
-      setBtnIsLoading(false)
-      toast.success("voted successfuly")
+      // console.log(voterId)
+      // console.log(selectedCandidate)
+      await vote(voterId, selectedCandidate)
       navigateTo("/voter-validation")
-
     } catch (error) {
       console.log(error)
-      setBtnIsLoading(false)
       toast.error("ERROR!")
       navigateTo("/voter-validation")
+    } finally {
+      setBtnIsLoading(false)
     }
+
   };
 
   useEffect(() => {
@@ -93,7 +92,7 @@ const VotingBooth = () => {
       try {
         setSelectedCandidate(null)
         const response = await axios.get(
-          "http://localhost:5000/v1/admin/get-all-candidate-from-server",
+          "http://localhost:4000/v1/admin/get-all-candidate-from-server",
           {
             withCredentials: true,
           }
@@ -121,8 +120,8 @@ const VotingBooth = () => {
           <CandidateCard
             key={candidate.candidate_ID}
             candidate={candidate}
-            isSelected={selectedCandidate?.candidate_ID === candidate.candidate_ID}
-            onSelect={() => setSelectedCandidate(candidate)}
+            isSelected={selectedCandidate === candidate.candidate_ID}
+            onSelect={() => setSelectedCandidate(candidate.candidate_ID)}
           />
         ))}
       </div>

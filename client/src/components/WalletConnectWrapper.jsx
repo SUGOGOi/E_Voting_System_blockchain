@@ -9,6 +9,7 @@ import "@solana/wallet-adapter-react-ui/styles.css";
 import {
     WalletModalProvider,
 } from "@solana/wallet-adapter-react-ui";
+import PropTypes from "prop-types";
 
 export const WalletConnectWrapper = ({ children }) => {
     const endpoint = clusterApiUrl("devnet");
@@ -24,4 +25,8 @@ export const WalletConnectWrapper = ({ children }) => {
         </ConnectionProvider>
 
     );
+};
+
+WalletConnectWrapper.propTypes = {
+    children: PropTypes.node.isRequired, // or PropTypes.element if only one React element is expected
 };

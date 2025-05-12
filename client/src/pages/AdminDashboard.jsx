@@ -2,11 +2,9 @@ import React, { useState, useEffect } from "react";
 import "../styles/adminDashboard.scss";
 import { toast } from "react-hot-toast"
 import axios from "axios"
-import { ethers } from 'ethers';
 import { io } from 'socket.io-client';
 import FaceRegister from "../components/FaceRegister";
 import { faceState, resultState } from "../store/store"
-import { useConnection, useWallet } from "@solana/wallet-adapter-react";
 import { useVotingSystem } from "../hooks/useVotingSystem";
 import { WalletMultiButton } from "@solana/wallet-adapter-react-ui";
 import { initializeState } from "../store/store"
@@ -26,11 +24,9 @@ const AdminDashboard = () => {
   const { initialize,
     addCandidate,
     addVoter,
-    candidates,
-    voters,
+
     fetchCandidates,
-    fetchVoters,
-    transactionPending } = useVotingSystem();
+  } = useVotingSystem();
 
   const { systemInitialized, setSystemInitialized, programState } = initializeState();
   const { candidateResult } = resultState();
@@ -41,16 +37,17 @@ const AdminDashboard = () => {
 
 
   //==========================For face recognition
-  const { faceData } = faceState();
+  const { faceData, setFaceData } = faceState();
   const clearFaceEncoding = faceState((state) => state.clearFaceData);
   const [showRegister, setShowRegister] = useState(false);
 
   //============================basic page
   const [activeSection, setActiveSection] = useState("addCandidate");
-  const [votingResults, setVotingResult] = useState([])
-  const contractAddress = "0x13f3e68525a2aa5ed8094843f806c45ee117535d";
+  // const [votingResults, setVotingResult] = useState([])
+  // const contractAddress = "0x13f3e68525a2aa5ed8094843f806c45ee117535d";
   const [loading, setLoading] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
+  // const [isLoading, setIsLoading] = useState(false);
+  console.log(loading)
 
 
   // Add Candidate
@@ -148,6 +145,7 @@ const AdminDashboard = () => {
     try {
       setLoading(true);
       await addVoter(voter_ID, voter_name)
+      setFaceData(null)
     } catch (error) {
       console.log(error)
       toast.error("ERROR! adding voter to blockchain")
