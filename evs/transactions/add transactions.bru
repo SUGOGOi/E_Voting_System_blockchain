@@ -1,0 +1,19 @@
+meta {
+  name: add transactions
+  type: http
+  seq: 1
+}
+
+post {
+  url: http://localhost:4000/transaction/record
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "txHash":"3cR8QRrDaKnpGg7mBwTuTzPCgHoBNx4wQccm4FrJLY4snS5oZVexBmm81f2g5BD58jUHT1PVXdrVCptxzFGMVXpk",
+    "type":"vote"
+    
+  }
+}

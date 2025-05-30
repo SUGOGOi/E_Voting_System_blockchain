@@ -18,6 +18,8 @@ const VotingBooth = () => {
   const [isLoading, setIsLoading] = useState(true); // State for loading
   const [error, setError] = useState(null); // State for errors
   const voterId = voterState((state) => state.voterId);
+  const voterName = voterState((state) => state.voterName);
+  const voterDob = voterState((state) => state.voterDob);
   const [isBtnLoading, setBtnIsLoading] = useState(false);
   // const contractAddress = "0x86a6000e5129c7cc363dbb8fc8ea9fa65aef2a00";
   // const contractAddress = "0x13f3e68525a2aa5ed8094843f806c45ee117535d";
@@ -75,7 +77,7 @@ const VotingBooth = () => {
     try {
       // console.log(voterId)
       // console.log(selectedCandidate)
-      await vote(voterId, selectedCandidate)
+      await vote(voterId, voterName, voterDob, selectedCandidate)
       navigateTo("/voter-validation")
     } catch (error) {
       console.log(error)

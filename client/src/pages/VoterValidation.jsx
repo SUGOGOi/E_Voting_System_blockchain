@@ -5,11 +5,11 @@ import { useNavigate } from 'react-router-dom';
 import { toast } from "react-hot-toast";
 import { faceState, voterState } from '../store/store.js';
 import FaceVerification from '../components/FaceVerification.jsx';
-import { useVotingSystem } from "../hooks/useVotingSystem";
+// import { useVotingSystem } from "../hooks/useVotingSystem";
 
 
 function VoterValidation() {
-  const { getVoterById } = useVotingSystem()
+  // const { getVoterById } = useVotingSystem()
   const navigateTo = useNavigate();
   const [voter_ID, setVoter_ID] = useState('');
   const [voter_DOB, setVoter_DOB] = useState('');
@@ -17,7 +17,7 @@ function VoterValidation() {
   const [showVerification, setShowVerification] = useState(false);
 
 
-  const { setVoterID, setIsVoted } = voterState();
+  const { setVoterID, setVoterName, setVoterDob } = voterState();
   const { isFaceMatch, setFaceMatch } = faceState();
 
   //Handle face verification
@@ -41,12 +41,21 @@ function VoterValidation() {
         }, {
           withCredentials: true,  // Include credentials (cookies, HTTP auth)
         });
-        setVoterID(voter_ID)
+        setVoterID(response.data.voter.voter_ID)
+        setVoterName(response.data.voter.voter_name)
+        setVoterDob(response.data.voter.voter_DOB)
+        const voter_name = response.data.voter.voter_name
 
         //call getcandidate details through backend
-        const response2 = await axios.get(`http://localhost:4000/v1/admin/get_voter_details/${voter_ID}`, {
-          withCredentials: true,  // Include credentials (cookies, HTTP auth)
-        })
+        const response2 = await axios.get(`http://localhost:4000/v1/admin/get_voter_details/${voter_ID}`,
+
+          {
+            params: {
+              name: voter_name,
+              dob: voter_DOB,
+            },
+            withCredentials: true,  // Include credentials (cookies, HTTP auth)
+          })
         // console.log(response2.data)
 
         if (response2.data.voter.hasVoted === true) {

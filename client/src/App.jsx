@@ -10,6 +10,7 @@ import AdminLogin from './pages/AdminLogin'
 import { adminState, SERVER_URL } from './store/store'
 import axios from 'axios'
 
+
 const App = () => {
   const { isLogin, setIsLogin } = adminState();
   const [isLoading, setIsLoading] = useState(true);
@@ -62,7 +63,7 @@ const App = () => {
         <div className="lazy-div"><p className='lazy-loading'></p></div>
       )} */}
       <RouterProvider router={router} />
-      <Toaster position='bottom-center' />
+      <Toaster position='top-center' />
 
     </>
   )

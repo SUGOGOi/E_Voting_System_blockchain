@@ -4,10 +4,11 @@ import { toast } from "react-hot-toast"
 import axios from "axios"
 import { io } from 'socket.io-client';
 import FaceRegister from "../components/FaceRegister";
-import { faceState, resultState } from "../store/store"
+import { faceState, resultState, SERVER_URL } from "../store/store"
 import { useVotingSystem } from "../hooks/useVotingSystem";
 import { WalletMultiButton } from "@solana/wallet-adapter-react-ui";
 import { initializeState } from "../store/store"
+import { useRef } from "react";
 
 
 
@@ -30,6 +31,8 @@ const AdminDashboard = () => {
 
   const { systemInitialized, setSystemInitialized, programState } = initializeState();
   const { candidateResult } = resultState();
+  const candidatePhotoRef = useRef();
+  const partyPhotoRef = useRef();
 
 
 
@@ -76,6 +79,7 @@ const AdminDashboard = () => {
 
 
   const handleCandidatePhotoChange = (e) => {
+    // console.log(candidate_Photo)
     setCandidate_Photo(e.target.files[0]);
   };
   const handlePartyPhotoChange = (e) => {
@@ -127,6 +131,8 @@ const AdminDashboard = () => {
       setLoading(false)
     }
 
+    candidatePhotoRef.current.value = "";
+    partyPhotoRef.current.value = "";
     setCandidate_ID("");
     setCandidate_name("");
     setParty_name("");
@@ -144,7 +150,7 @@ const AdminDashboard = () => {
     e.preventDefault();
     try {
       setLoading(true);
-      await addVoter(voter_ID, voter_name)
+      await addVoter(voter_name, voter_ID, voter_DOB)
       setFaceData(null)
     } catch (error) {
       console.log(error)
@@ -238,6 +244,38 @@ const AdminDashboard = () => {
 
   }
 
+
+  //<=================================================FETCH transactions=======================================
+  const [selectedType, setSelectedType] = useState("all")
+  const [transactions, setTransactions] = useState([])
+  const fetchTransactions = async (e) => {
+    e.preventDefault();
+
+    try {
+
+      const res = await axios.get(`${SERVER_URL}/transaction/${selectedType}`, {
+        withCredentials: true
+      })
+
+
+      if (res.data.success === true) {
+        setTransactions(res.data.transactions)
+        toast.success(`${selectedType} Transactions fetched!`)
+      }
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+
+  //==========================================COPY TRANSACTION HASH ============================================
+  const copyTansactionHash = (txHash) => {
+    navigator.clipboard.writeText(txHash)
+    toast.success("copied!")
+  }
+
+
+  //=================================================LOG OUT=============================================
   const logoutHandler = async (e) => {
 
     e.preventDefault();
@@ -297,6 +335,12 @@ const AdminDashboard = () => {
               >
                 View Results
               </li>
+              <li
+                className={activeSection === "viewTransactionHistory" ? "active" : ""}
+                onClick={() => setActiveSection("viewTransactionHistory")}
+              >
+                Transaction History
+              </li>
 
             </ul>
           </div>
@@ -335,7 +379,8 @@ const AdminDashboard = () => {
                 type="file"
                 placeholder="Candidate Photo"
                 accept="image/*"
-                value={candidate_Photo}
+                // value={candidate_Photo}
+                ref={candidatePhotoRef}
                 onChange={handleCandidatePhotoChange}
               />
               <label className="party_logo"  >Party Logo</label>
@@ -343,7 +388,9 @@ const AdminDashboard = () => {
                 type="file"
                 placeholder="Party Logo"
                 accept="image/*"
-                value={party_Photo}
+                // value={party_Photo}
+                ref={partyPhotoRef}
+
                 onChange={handlePartyPhotoChange}
               />
               <button className="a_button" style={{ width: "300px" }} onClick={handleAddCandidate}>Add Candidate</button>
@@ -355,15 +402,15 @@ const AdminDashboard = () => {
               <h2>Add Voter</h2>
               <input
                 type="text"
-                placeholder="Voter Name"
-                value={voter_name}
-                onChange={(e) => setVoter_name(e.target.value)}
-              />
-              <input
-                type="text"
                 placeholder="Voter ID"
                 value={voter_ID}
                 onChange={(e) => setVoter_ID(e.target.value)}
+              />
+              <input
+                type="text"
+                placeholder="Voter Name"
+                value={voter_name}
+                onChange={(e) => setVoter_name(e.target.value)}
               />
               <input
                 type="date"
@@ -471,6 +518,71 @@ const AdminDashboard = () => {
               )}
             </div>
           )}
+
+
+          {activeSection === "viewTransactionHistory" && (
+            <div className="transaction-section">
+              <h2>View Transactions</h2>
+
+              {/* Dropdown to select transaction type */}
+              <div style={{ marginBottom: "1rem" }}>
+                <label htmlFor="transactionType" style={{ marginRight: "0.5rem" }}>Select Type:</label>
+                <select
+                  id="transactionType"
+                  value={selectedType}
+                  onChange={(e) => setSelectedType(e.target.value)}
+                  style={{ padding: "0.5rem" }}
+                >
+                  <option value="all">All</option>
+                  <option value="votes">Vote</option>
+                  <option value="candidates">Add Candidate</option>
+                  <option value="voters">Add Voter</option>
+                </select>
+              </div>
+
+              {/* Button to fetch transactions */}
+              <div className="sub-section">
+                <button className="fetch-button" onClick={fetchTransactions}>
+                  Fetch
+                </button>
+
+                <p>Total Transactions: {transactions.length}</p>
+              </div>
+
+              {/* Transaction list */}
+              {transactions.length > 0 ? (
+                <div
+                  style={{
+                    maxHeight: "300px", // You can adjust this height as needed
+                    overflowY: "auto",
+                    border: "1px solid #ccc",
+                    borderRadius: "8px",
+                    padding: "10px",
+                    width: "500px"
+                  }}
+                >
+                  <ul className="results-list" style={{ marginTop: "1rem" }}>
+                    {transactions.map((txn, index) => (
+                      <li key={index} style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+                        <span title={txn.txHash}>
+                          {txn.txHash.slice(0, 10)}...{txn.txHash.slice(-6)}
+                        </span>
+                        <button
+                          onClick={() => copyTansactionHash(txn.txHash)}
+                          style={{ marginLeft: "10px", padding: "5px 10px" }}
+                        >
+                          Copy
+                        </button>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              ) : (
+                <p style={{ marginTop: "1rem" }}>No results to display.Click &quot; Fetch&quot; to load data.</p>
+              )}
+            </div>
+          )}
+
         </div>) : (<div className="connect-button">
 
           <div className=""><h3>1. Connect to wallet:</h3><WalletMultiButton /></div>

@@ -23,9 +23,13 @@ export const vcState = create(
 export const voterState = create(
   devtools((set) => ({
     voterId: "",
+    voterName: "",
+    voterDob: "",
     isVoted: "",
 
     setVoterID: (voterId) => set({ voterId: voterId }),
+    setVoterName: (voterName) => set({ voterName: voterName }),
+    setVoterDob: (voterDob) => set({ voterDob: voterDob }),
     setIsVoted: (isVoted) => set({ isVoted: isVoted }),
   }))
 );
@@ -69,6 +73,12 @@ export const SERVER_URL = "http://localhost:4000";
 //   "DexJ1VxAuL8PM3E8B7mi7gpk934XvrxTK2aN1eB2vbLn"
 // );
 
+// export const EVM_SMART_CONTRACT_PUBKEY = new PublicKey(
+//   "D6FmaZDfQAMQ3GERMEnxLKmkwbP21q14r1hciAy2L5o"
+// );
+
 export const EVM_SMART_CONTRACT_PUBKEY = new PublicKey(
-  "D6FmaZDfQAMQ3GERMEnxLKmkwbP21q14r1hciAy2L5o"
+  "5dqd27fMiBV5DZd4DdnZw7Qd2XBAVt8LZKDRGxLK99Ng"
 );
+
+// BbtLbZj9Eywph1uuLJkWgArRsFEEijcaNvUL1CHLvicK;
