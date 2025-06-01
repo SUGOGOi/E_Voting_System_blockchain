@@ -1,4 +1,6 @@
 import { Candidate } from "../models/candidateModel.js";
+import { Agent } from "../models/pollingAgentModel.js";
+
 import { Voter } from "../models/voterModel.js";
 import { rm } from "fs";
 import { socketManager } from "../socket/socketManager.js";
@@ -32,7 +34,7 @@ const computeVoterHash = (name, dob, voterId, salt = FIXED_SALT) => {
 //<=============================================REG CANDIDATE================================================================>
 export const registerCandidate = async (req, res, next) => {
   try {
-    const { candidate_name, party_name, candidate_ID } = req.body;
+    const { candidate_name, party_name, candidate_ID, PDA } = req.body;
 
     const { file1, file2 } = req.files;
 
@@ -49,7 +51,7 @@ export const registerCandidate = async (req, res, next) => {
       return res.status(400).json({ error: "Upload photo" });
     }
 
-    if (!candidate_name || !party_name || !candidate_ID) {
+    if (!candidate_name || !party_name || !candidate_ID || !PDA) {
       rm(file1[0].path, () => {
         console.log(`${file1[0].originalname} deleted`);
       });
@@ -77,6 +79,7 @@ export const registerCandidate = async (req, res, next) => {
       party_name,
       candidate_Photo: file1[0].path,
       party_Photo: file2[0].path,
+      PDA,
     });
     return res.status(201).json({
       success: true,
@@ -229,6 +232,66 @@ export const registerVotingCenter = async (req, res, next) => {
       success: false,
       error: `Registration Unsuccessful`,
     });
+  }
+};
+
+//<=======================================reg polling agent==================================>
+
+export const addAgent = async (req, res) => {
+  try {
+    const { agent_ID, agent_name, email, password, candidate_ID } = req.body;
+
+    // Validate required fields
+    if (!agent_ID || !agent_name || !email || !password || !candidate_ID) {
+      return res.status(400).json({ message: "All fields are required" });
+    }
+
+    // Check if agent already exists
+    const existingAgent = await Agent.findOne({ agent_ID });
+    if (existingAgent) {
+      return res
+        .status(409)
+        .json({ success: false, error: "Agent ID already exists" });
+    }
+
+    // Validate candidate ID
+    const candidate = await Candidate.findOne({ candidate_ID });
+    if (!candidate) {
+      return res
+        .status(404)
+        .json({ success: false, error: "Candidate not found" });
+    }
+
+    // Check if candidate already has an agent
+    const existingCandidateAgent = await Agent.findOne({
+      candidateId: candidate._id,
+    });
+    if (existingCandidateAgent) {
+      return res.status(409).json({
+        success: false,
+        error: "This candidate already has an assigned agent",
+      });
+    }
+
+    // Create new agent
+    const newAgent = new Agent({
+      agent_ID,
+      agent_name,
+      email,
+      password, // In production, hash password before saving
+      candidateId: candidate._id,
+    });
+
+    await newAgent.save();
+
+    res.status(201).json({
+      success: true,
+      message: "Agent added successfully",
+      agent: newAgent,
+    });
+  } catch (error) {
+    console.error("Error adding agent:", error);
+    res.status(500).json({ success: false, error: "Internal server error" });
   }
 };
 

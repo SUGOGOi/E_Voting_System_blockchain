@@ -16,6 +16,7 @@ import voterRoutes from "./src/routes/voterRoute.js";
 import conflictRoutes from "./src/routes/conflictRoute.js";
 import adminRoutes from "./src/routes/adminRoute.js";
 import transactionRoutes from "./src/routes/transactionRoute.js";
+import agentRoutes from "./src/routes/agentRoute.js";
 dotenv.config();
 
 const app = express();
@@ -63,6 +64,7 @@ app.use("/voter", voterRoutes); // voter routes
 app.use("/data", conflictRoutes); // check conflict routes
 app.use("/v1", adminRoutes); // admin routes
 app.use("/transaction", transactionRoutes);
+app.use("/agent", agentRoutes);
 
 const port = process.env.PORT;
 

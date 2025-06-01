@@ -1,5 +1,6 @@
 import express from "express";
 import {
+  addAgent,
   admin_VC_Logout,
   adminLogin,
   getAllCandidatedetailsFromServer,
@@ -21,6 +22,9 @@ router.post("/admin/register_candidate", multiUpload, registerCandidate);
 
 //<==========================================================CREATE/REG VOTER AFTER STORE IT IN BLOCKCHAIN===============================================>
 router.post("/admin/register_voter", registerVoter);
+
+//<======================================================CREATE/REG POLLING AGENT=======================>
+router.post("/add-polling-agent", addAgent);
 
 //<===========================================================CREATE/REG VOTING CENTER================================================================>
 router.post("/admin/register_voting_center", registerVotingCenter);

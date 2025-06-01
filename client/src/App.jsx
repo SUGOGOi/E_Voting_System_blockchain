@@ -9,6 +9,9 @@ import AdminDashboard from './pages/AdminDashboard'
 import AdminLogin from './pages/AdminLogin'
 import { adminState, SERVER_URL } from './store/store'
 import axios from 'axios'
+import AgentLogin from './pages/AgentLogin'
+import AgentDashboard from './pages/AgentDashboard'
+import VoteTransactions from './pages/publicVoteTransaction'
 
 
 const App = () => {
@@ -26,6 +29,9 @@ const App = () => {
     { path: "/voting-booth", element: <VotingBooth saveState={saveState} /> },
     { path: "/admin", element: isLogin ? <AdminDashboard saveState={saveState} /> : <Navigate to="/a-login" /> },
     { path: "/a-login", element: isLogin ? <Navigate to="/admin" /> : <AdminLogin saveState={saveState} /> },
+    { path: "/agent-login", element: <AgentLogin saveState={saveState} /> },
+    { path: "/agent-dashboard", element: <AgentDashboard saveState={saveState} /> },
+    { path: "/public-voting-transactions", element: <VoteTransactions saveState={saveState} /> },
   ])
 
   useEffect(() => {

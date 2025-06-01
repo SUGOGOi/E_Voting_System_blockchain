@@ -67,6 +67,17 @@ export const resultState = create(
   }))
 );
 
+export const agentState = create(
+  devtools((set) => ({
+    candidate_ID: "",
+    agentId: "",
+    agentName: "",
+    setAgentId: (item) => set({ agentId: item }),
+    setAgentName: (item) => set({ agentName: item }),
+    setCandidate_ID: (item) => set({ candidate_ID: item }),
+  }))
+);
+
 export const SERVER_URL = "http://localhost:4000";
 
 // export const EVM_SMART_CONTRACT_PUBKEY = new PublicKey(

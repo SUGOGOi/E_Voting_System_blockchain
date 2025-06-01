@@ -14,6 +14,7 @@
 /server/contracts/evm 2.zip
 /server/contracts/program-keypair.json
 /server/contracts/wallet-keypair.json
+/evs
 /.pnp
 .pnp.*
 .yarn/*
