@@ -22,10 +22,6 @@ const candidateSchema = new mongoose.Schema(
     party_Photo: {
       type: String,
     },
-    PDA: {
-      type: String,
-      required: [true, "candidate PDA is required"],
-    },
   },
   { timestamps: true }
 );

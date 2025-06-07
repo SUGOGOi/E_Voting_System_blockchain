@@ -187,6 +187,45 @@ const AdminDashboard = () => {
 
   };
 
+
+  //==========================================Add agent============================================
+  const [agent_ID, setAgent_ID] = useState("")
+  const [agent_name, setAgent_name] = useState("")
+  const [agent_email, setAgentEmail] = useState("")
+  const [agent_password, setAgentPassword] = useState("")
+  const [agent_candidate_Id, setAgentCandidateId] = useState("")
+  const handleAddAgent = async (e) => {
+    e.preventDefault();
+    try {
+      const res = await axios.post(`${SERVER_URL}/v1/add-polling-agent`, {
+        agent_ID, agent_name, email: agent_email, password: agent_password, candidate_ID: agent_candidate_Id
+      }, {
+        withCredentials: true
+      })
+
+
+
+      if (res.data.success === true) {
+        toast.success(res.data.message)
+        setAgent_ID("")
+        setAgent_name("")
+        setAgentEmail("")
+        setAgentPassword("")
+        setAgentCandidateId("")
+      }
+    } catch (error) {
+      console.log(error)
+      toast.error(error.response.data.error)
+    } finally {
+      setAgent_ID("")
+      setAgent_name("")
+      setAgentEmail("")
+      setAgentPassword("")
+      setAgentCandidateId("")
+    }
+
+  }
+
   //<========================================COUNTDOWN============================================>
   useEffect(() => {
     // Connect to the backend WebSocket
@@ -323,6 +362,13 @@ const AdminDashboard = () => {
               >
                 Add Voter
               </li>
+
+              <li
+                className={activeSection === "addAgent" ? "active" : ""}
+                onClick={() => setActiveSection("addAgent")}
+              >
+                Add Agent
+              </li>
               <li
                 className={activeSection === "setTimer" ? "active" : ""}
                 onClick={() => setActiveSection("setTimer")}
@@ -444,6 +490,53 @@ const AdminDashboard = () => {
                 />
               </div>
               <button className="a_button" style={{ width: "300px" }} onClick={handleAddVoter}>Add Voter</button>
+
+            </div>
+          )}
+
+
+          {activeSection === "addAgent" && (
+            <div className="section">
+              <h2>Add Agent</h2>
+              <input
+                type="text"
+                placeholder="Agent ID"
+                value={agent_ID}
+                onChange={(e) => setAgent_ID(e.target.value)}
+              />
+              <input
+                type="text"
+                placeholder="Agent Name"
+                value={agent_name}
+                onChange={(e) => setAgent_name(e.target.value)}
+              />
+              <input
+                type="email"
+                // id="dob"
+                placeholder="Agent Email"
+                value={agent_email}
+                onChange={(e) => setAgentEmail(e.target.value)}
+
+              />
+
+              <input
+                type="password"
+                // id="dob"
+                placeholder="Agent password"
+                value={agent_password}
+                onChange={(e) => setAgentPassword(e.target.value)}
+
+              />
+
+              <input
+                type="text"
+                // id="dob"
+                placeholder="Candidate Id"
+                value={agent_candidate_Id}
+                onChange={(e) => setAgentCandidateId(e.target.value)}
+
+              />
+              <button className="a_button" style={{ width: "300px" }} onClick={handleAddAgent}>Add Agent</button>
 
             </div>
           )}

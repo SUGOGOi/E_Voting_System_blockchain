@@ -84,12 +84,13 @@ export const SERVER_URL = "http://localhost:4000";
 //   "DexJ1VxAuL8PM3E8B7mi7gpk934XvrxTK2aN1eB2vbLn"
 // );
 
-// export const EVM_SMART_CONTRACT_PUBKEY = new PublicKey(
-//   "D6FmaZDfQAMQ3GERMEnxLKmkwbP21q14r1hciAy2L5o"
-// );
-
 export const EVM_SMART_CONTRACT_PUBKEY = new PublicKey(
-  "5dqd27fMiBV5DZd4DdnZw7Qd2XBAVt8LZKDRGxLK99Ng"
+  // "J9Z9g7xPrfB1PYECbRARymmiTz7fWjPPCdom12DqGGCk"
+  "CzkrZZnAzQZPDFJkLjmW3PhBQCcr21x6sdobCG8kZyHX"
 );
+
+// export const EVM_SMART_CONTRACT_PUBKEY = new PublicKey(
+//   "5dqd27fMiBV5DZd4DdnZw7Qd2XBAVt8LZKDRGxLK99Ng"
+// );
 
 // BbtLbZj9Eywph1uuLJkWgArRsFEEijcaNvUL1CHLvicK;

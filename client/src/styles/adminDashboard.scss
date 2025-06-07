@@ -110,6 +110,8 @@ body {
 
   input[type="text"],
   input[type="date"],
+  input[type="email"],
+  input[type="password"],
   input[type="file"] {
     width: 100%;
     padding: 10px;
@@ -125,9 +127,11 @@ body {
 
   .party_logo {
     align-self: flex-start;
-    margin-bottom: 5px;
+    // margin-bottom: 2px;
+    margin: -2px;
+
     color: #333;
-    font-size: 1rem;
+    font-size: 0.8rem;
   }
 
   .a_button {
@@ -205,9 +209,9 @@ body {
 
   .party_logo {
     align-self: flex-start;
-    margin-bottom: 5px;
+    margin: -2px;
     color: #333;
-    font-size: 1rem;
+    font-size: 0.8rem;
   }
 
   .a_button {

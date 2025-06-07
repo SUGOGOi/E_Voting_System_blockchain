@@ -34,7 +34,7 @@ const computeVoterHash = (name, dob, voterId, salt = FIXED_SALT) => {
 //<=============================================REG CANDIDATE================================================================>
 export const registerCandidate = async (req, res, next) => {
   try {
-    const { candidate_name, party_name, candidate_ID, PDA } = req.body;
+    const { candidate_name, party_name, candidate_ID } = req.body;
 
     const { file1, file2 } = req.files;
 
@@ -51,7 +51,7 @@ export const registerCandidate = async (req, res, next) => {
       return res.status(400).json({ error: "Upload photo" });
     }
 
-    if (!candidate_name || !party_name || !candidate_ID || !PDA) {
+    if (!candidate_name || !party_name || !candidate_ID) {
       rm(file1[0].path, () => {
         console.log(`${file1[0].originalname} deleted`);
       });
@@ -79,7 +79,6 @@ export const registerCandidate = async (req, res, next) => {
       party_name,
       candidate_Photo: file1[0].path,
       party_Photo: file2[0].path,
-      PDA,
     });
     return res.status(201).json({
       success: true,
@@ -243,7 +242,9 @@ export const addAgent = async (req, res) => {
 
     // Validate required fields
     if (!agent_ID || !agent_name || !email || !password || !candidate_ID) {
-      return res.status(400).json({ message: "All fields are required" });
+      return res
+        .status(400)
+        .json({ success: false, error: "All fields are required" });
     }
 
     // Check if agent already exists
