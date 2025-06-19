@@ -36,44 +36,75 @@ A secure, transparent, and decentralized voting system built with modern web tec
 - **client**: React frontend application
 - **server**: Node.js backend server
 - **face_server**: Flask face recognition server
+- **docs**: Some other resouces
 - **README.md**
 
-
-## 🔧 Installation & Setup
-
-### Prerequisites
-
-- Node.js (v14 or higher)
-- Python (v3.8 or higher)
-- MongoDB
-- Solana CLI
-- Git
-
-### 1. Clone the Repository
-- git clone https://github.com/yourusername/E_Voting_System_blockchain.git
-- cd E_Voting_System_blockchain
-
   
-### 2. Frontend Setup
-- cd client
-- npm install
-- npm run dev
-- The frontend will be available at `http://localhost:5173/`
 
-### 3. Backend Setup
-- cd server
-- npm install
-- npm run dev
-- setup .env from .env.example
-- The backend server will run on `http://localhost:4000`
+## 📸 Screenshots
 
-### 4. Face Recognition Server Setup(Windows)
-- cd face_server
-- setup .env from .env.example
-- .venv\Scripts\activate
-- pip install -r requirements.txt
-- flask run
-- The face recognition server will run on`http://127.0.0.1:5000`
+### Admin/Election Commission
+![Admin/Election commission](docs/screenshots/admin-area.png)
+*Overview of the blockchain voting system admin area*
+
+### Voter Registration
+![Voter Registration](docs/screenshots/voter-reg.png)
+*Face recognition-based voter registration interface*
+
+### Voting Interface
+![Voting Interface](docs/screenshots/voting-interface.png)
+*Main voting dashboard with candidate selection*
+
+### Blockchain Transactions
+![Blockchain Transactions](docs/screenshots/blockchain-transaction.png)
+*Transaction payment through Phantom wallet*
+
+### Real-time Results 
+![Real-time Results](docs/screenshots/candidate-agent.png)
+* Voting results refresh every minute*
+
+## 🔐 Security Features
+
+### Privacy Protection
+- **Hash-based Anonymity**: Voter identities are protected through cryptographic hashing
+- **Biometric Verification**: Face recognition ensures only authorized voters can participate
+- **Blockchain Immutability**: All votes are permanently recorded and tamper-proof
+
+### Transaction Security
+- **Smart Contract Validation**: Rust-based smart contracts ensure vote integrity
+- **Low-cost Transactions**: Solana's efficient consensus mechanism reduces fees
+- **Transparent Auditing**: All transactions visible on Solana Explorer
 
 
+## 📊 Monitoring & Analytics
+
+- **Solana Explorer**: Monitor all blockchain transactions
+- **Real-time Dashboard**: Track voting progress and participation
+- **Transaction Logs**: Detailed audit trail for all voting activities
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add some amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+
+## 🙏 Acknowledgments
+
+- Solana Foundation for blockchain infrastructure
+- MERN stack community for web development resources
+- Flask community for Python web framework support
+- Open source contributors for various libraries and tools
+
+## 📞 Support
+
+For support and questions:
+- Create an issue in this repository
+- Contact: sumsumgogoi51@gmail.com
+- Portfolio: https://sumsum-gogoi.vercel.app/
+
+---
+
+**Note**: This is a demonstration project for educational purposes. Ensure proper security audits before deploying in production environments.
 
