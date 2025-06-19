@@ -80,17 +80,7 @@ export const agentState = create(
 
 export const SERVER_URL = "http://localhost:4000";
 
-// export const EVM_SMART_CONTRACT_PUBKEY = new PublicKey(
-//   "DexJ1VxAuL8PM3E8B7mi7gpk934XvrxTK2aN1eB2vbLn"
-// );
-
 export const EVM_SMART_CONTRACT_PUBKEY = new PublicKey(
   // "J9Z9g7xPrfB1PYECbRARymmiTz7fWjPPCdom12DqGGCk"
   "CzkrZZnAzQZPDFJkLjmW3PhBQCcr21x6sdobCG8kZyHX"
 );
-
-// export const EVM_SMART_CONTRACT_PUBKEY = new PublicKey(
-//   "5dqd27fMiBV5DZd4DdnZw7Qd2XBAVt8LZKDRGxLK99Ng"
-// );
-
-// BbtLbZj9Eywph1uuLJkWgArRsFEEijcaNvUL1CHLvicK;
